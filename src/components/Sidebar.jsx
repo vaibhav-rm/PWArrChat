@@ -1,9 +1,14 @@
-import React from 'react';
+import React, { useContext } from 'react';
 import { Search, Plus, MoreVertical } from 'lucide-react';
 import { auth } from '../firebase';
 import { signOut } from 'firebase/auth';
+import { AuthContext } from './context/AuthContext';
+import Chats from './Chats';
 
-export function Sidebar({ chats, onSelectChat, onSearch, searchTerm, setSearchTerm }) {
+export function Sidebar({ chats, onSelectChat, onSearch, searchTerm, setSearchTerm, handleKey, user, handleSelect }) {
+
+  const {currentUser} = useContext(AuthContext);
+
   return (
     <div className="w-1/4 bg-black bg-opacity-70 backdrop-filter backdrop-blur-sm border-r border-gray-800">
       <div className="p-4 bg-black bg-opacity-80 flex justify-between items-center">
@@ -18,12 +23,13 @@ export function Sidebar({ chats, onSelectChat, onSearch, searchTerm, setSearchTe
         </div>
       </div>
       <div className="p-4">
-      
-      <input 
-        type='button'
-        placeholder='Logout'
-        onClick={() => signOut(auth)}
-        />
+
+      <img src={currentUser.photoURL} alt='' />
+      <span>{currentUser.displayName}</span>
+
+      <button onClick={() => signOut(auth)}>
+        Logout
+      </button>
 
         <div className="relative">
           <input
@@ -32,27 +38,29 @@ export function Sidebar({ chats, onSelectChat, onSearch, searchTerm, setSearchTe
             className="w-full pl-10 pr-4 py-2 rounded-full bg-gray-800 bg-opacity-50 text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-gray-500"
             value={searchTerm}
             onChange={(e) => setSearchTerm(e.target.value)}
-            onKeyPress={(e) => e.key === 'Enter' && onSearch()}
+            onKeyDown={handleKey}
           />
           <Search size={20} className="absolute left-3 top-2.5 text-gray-400" onClick={onSearch} />
         </div>
+         {/* Display the fetched user details */}
+      {user && (
+        <button onClick={handleSelect}>
+        <div className="mt-4 flex items-center space-x-4 bg-gray-900 bg-opacity-50 p-4 rounded-lg">
+          <img
+            src={user.photoURL}
+            alt={user.displayName}
+            className="w-16 h-16 rounded-full border-2 border-gray-500"
+          />
+          <div className="text-white">
+            <p className="text-lg font-semibold">{user.displayName}</p>
+            <p className="text-sm text-gray-400">{searchTerm}</p>
+          </div>
+        </div>
+        </button>
+      )}
       </div>
       <div className="overflow-y-auto h-[calc(100vh-140px)]">
-        {chats.map((chat) => (
-          <div
-            key={chat.id}
-            className="flex items-center p-4 hover:bg-gray-800 hover:bg-opacity-30 cursor-pointer transition-colors"
-            onClick={() => onSelectChat(chat)}
-          >
-            <div className="w-12 h-12 bg-gradient-to-br from-gray-500 to-gray-700 rounded-full flex items-center justify-center text-white font-semibold text-lg mr-4">
-              {chat.participants.find(p => p !== auth.currentUser.email).charAt(0).toUpperCase()}
-            </div>
-            <div className="flex-1">
-              <h3 className="font-semibold text-white">{chat.participants.find(p => p !== auth.currentUser.email)}</h3>
-              <p className="text-sm text-gray-400 truncate">Click to view messages</p>
-            </div>
-          </div>
-        ))}
+        <Chats/>
       </div>
     </div>
   );

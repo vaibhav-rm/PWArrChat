@@ -19,7 +19,8 @@ export function Signup() {
       await setDoc(doc(db, 'users', user.uid), {
         uid: user.uid,
         email: user.email,
-        displayName: user.displayName || user.email
+        displayName: user.displayName || user.email,
+        photoURL: user.photoURL
       });
 
       await setDoc(doc(db, "userChats", user.id), {});

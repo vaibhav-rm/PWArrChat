@@ -23,12 +23,21 @@ export function Login() {
 
   const handleGoogleLogin = async () => {
     try {
-      await signInWithPopup(auth, googleProvider);
+      const userCredential = await signInWithPopup(auth, googleProvider);
+      const user = userCredential.user;
+      await setDoc(doc(db, 'users', user.uid), {
+        uid: user.uid,
+        email: user.email,
+        displayName: user.displayName || user.email,
+        photoURL: user.photoURL
+      });
+      await setDoc(doc(db, "userChats", user.uid), {});
       navigate('/');
     } catch (error) {
       console.error('Error logging in with Google:', error);
     }
   };
+
 
   return (
     <Container component="main" maxWidth="xs" className="h-screen flex items-center justify-center">
