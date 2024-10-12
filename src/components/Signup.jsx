@@ -17,9 +17,13 @@ export function Signup() {
       const user = userCredential.user;
       // Save user details in Firestore
       await setDoc(doc(db, 'users', user.uid), {
+        uid: user.uid,
         email: user.email,
         displayName: user.displayName || user.email
       });
+
+      await setDoc(doc(db, "userChats", user.id), {});
+
       navigate('/chat');
     } catch (error) {
       console.error('Error signing up:', error);

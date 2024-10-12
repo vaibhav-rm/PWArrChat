@@ -18,6 +18,7 @@ export function Login() {
       const user = userCredential.user;
       // Save user details in Firestore
       await setDoc(doc(db, 'users', user.uid), {
+        uid: user.uid,
         email: user.email,
         displayName: user.displayName || user.email
       });
@@ -32,6 +33,7 @@ export function Login() {
       const userCredential = await signInWithPopup(auth, googleProvider);
       const user = userCredential.user;
       await setDoc(doc(db, 'users', user.uid), {
+        uid: user.uid,
         email: user.email,
         displayName: user.displayName || user.email
       });

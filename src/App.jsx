@@ -1,17 +1,17 @@
-import React from 'react';
+import React, { useContext } from 'react';
 import { BrowserRouter as Router, Route, Routes, Navigate } from 'react-router-dom';
 import { Login } from './components/Login';
 import { Signup } from './components/Signup';
 import { ChatApp } from './components/ChatApp';
 import { auth } from './firebase';
 import { useAuthState } from 'react-firebase-hooks/auth';
-
-function PrivateRoute({ children }) {
-  const [user] = useAuthState(auth);
-  return user ? children : <Navigate to="/login" />;
-}
+import { AuthContext } from './components/context/AuthContext';
 
 export default function App() {
+
+  const {currentUser} = useContext(AuthContext);
+  console.log(currentUser); 
+
   return (
     <Router>
       <div className="min-h-screen bg-black text-white">
@@ -41,11 +41,7 @@ export default function App() {
           <Route path="/signup" element={<Signup />} />
           <Route 
             path="/chat" 
-            element={
-              <PrivateRoute>
-                <ChatApp />
-              </PrivateRoute>
-            } 
+            element={<ChatApp />} 
           />
           <Route path="*" element={<Navigate to="/login" />} />
         </Routes>

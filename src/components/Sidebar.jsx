@@ -1,6 +1,7 @@
 import React from 'react';
 import { Search, Plus, MoreVertical } from 'lucide-react';
 import { auth } from '../firebase';
+import { signOut } from 'firebase/auth';
 
 export function Sidebar({ chats, onSelectChat, onSearch, searchTerm, setSearchTerm }) {
   return (
@@ -17,6 +18,13 @@ export function Sidebar({ chats, onSelectChat, onSearch, searchTerm, setSearchTe
         </div>
       </div>
       <div className="p-4">
+      
+      <input 
+        type='button'
+        placeholder='Logout'
+        onClick={() => signOut(auth)}
+        />
+
         <div className="relative">
           <input
             type="text"
