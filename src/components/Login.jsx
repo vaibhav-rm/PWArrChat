@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { signInWithEmailAndPassword, signInWithPopup } from 'firebase/auth';
-import { auth, googleProvider } from '../firebase';
+import { auth, db, googleProvider } from '../firebase'; // Import db
 import { Button, TextField, Typography, Container, Box } from '@mui/material';
 import { Google as GoogleIcon } from '@mui/icons-material';
 import { Link, useNavigate } from 'react-router-dom';
@@ -14,11 +14,13 @@ export function Login() {
   const handleLogin = async (e) => {
     e.preventDefault();
     try {
-        await setDoc(doc(db, 'users', auth.currentUser.uid), {
-            email: auth.currentUser.email,
-            displayName: auth.currentUser.displayName || auth.currentUser.email
-          });
-      await signInWithEmailAndPassword(auth, email, password);
+      const userCredential = await signInWithEmailAndPassword(auth, email, password);
+      const user = userCredential.user;
+      // Save user details in Firestore
+      await setDoc(doc(db, 'users', user.uid), {
+        email: user.email,
+        displayName: user.displayName || user.email
+      });
       navigate('/chat');
     } catch (error) {
       console.error('Error logging in:', error);
@@ -27,7 +29,12 @@ export function Login() {
 
   const handleGoogleLogin = async () => {
     try {
-      await signInWithPopup(auth, googleProvider);
+      const userCredential = await signInWithPopup(auth, googleProvider);
+      const user = userCredential.user;
+      await setDoc(doc(db, 'users', user.uid), {
+        email: user.email,
+        displayName: user.displayName || user.email
+      });
       navigate('/chat');
     } catch (error) {
       console.error('Error logging in with Google:', error);
