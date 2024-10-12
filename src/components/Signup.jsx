@@ -3,6 +3,7 @@ import { createUserWithEmailAndPassword } from 'firebase/auth';
 import { auth } from '../firebase';
 import { Button, TextField, Typography, Container, Box } from '@mui/material';
 import { Link, useNavigate } from 'react-router-dom';
+import { setDoc, doc } from 'firebase/firestore';
 
 export function Signup() {
   const [email, setEmail] = useState('');
@@ -13,6 +14,10 @@ export function Signup() {
     e.preventDefault();
     try {
       await createUserWithEmailAndPassword(auth, email, password);
+      await setDoc(doc(db, 'users', auth.currentUser.uid), {
+        email: auth.currentUser.email,
+        displayName: auth.currentUser.displayName || auth.currentUser.email
+      });
       navigate('/chat');
     } catch (error) {
       console.error('Error signing up:', error);

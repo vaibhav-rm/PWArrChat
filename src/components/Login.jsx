@@ -4,6 +4,7 @@ import { auth, googleProvider } from '../firebase';
 import { Button, TextField, Typography, Container, Box } from '@mui/material';
 import { Google as GoogleIcon } from '@mui/icons-material';
 import { Link, useNavigate } from 'react-router-dom';
+import { setDoc, doc } from 'firebase/firestore';
 
 export function Login() {
   const [email, setEmail] = useState('');
@@ -13,6 +14,10 @@ export function Login() {
   const handleLogin = async (e) => {
     e.preventDefault();
     try {
+        await setDoc(doc(db, 'users', auth.currentUser.uid), {
+            email: auth.currentUser.email,
+            displayName: auth.currentUser.displayName || auth.currentUser.email
+          });
       await signInWithEmailAndPassword(auth, email, password);
       navigate('/chat');
     } catch (error) {

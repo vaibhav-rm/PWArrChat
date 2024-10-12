@@ -2,7 +2,7 @@ import React from 'react';
 import { BrowserRouter as Router, Route, Routes, Navigate } from 'react-router-dom';
 import { Login } from './components/Login';
 import { Signup } from './components/Signup';
-import { Chat } from './components/Chat';
+import { ChatApp } from './components/ChatApp';
 import { auth } from './firebase';
 import { useAuthState } from 'react-firebase-hooks/auth';
 
@@ -43,7 +43,7 @@ export default function App() {
             path="/chat" 
             element={
               <PrivateRoute>
-                <Chat />
+                <ChatApp />
               </PrivateRoute>
             } 
           />
