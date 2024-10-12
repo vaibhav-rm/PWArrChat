@@ -14,15 +14,8 @@ export function Login() {
   const handleLogin = async (e) => {
     e.preventDefault();
     try {
-      const userCredential = await signInWithEmailAndPassword(auth, email, password);
-      const user = userCredential.user;
-      // Save user details in Firestore
-      await setDoc(doc(db, 'users', user.uid), {
-        uid: user.uid,
-        email: user.email,
-        displayName: user.displayName || user.email
-      });
-      navigate('/chat');
+      await signInWithEmailAndPassword(auth, email, password);
+      navigate('/');
     } catch (error) {
       console.error('Error logging in:', error);
     }
@@ -30,14 +23,8 @@ export function Login() {
 
   const handleGoogleLogin = async () => {
     try {
-      const userCredential = await signInWithPopup(auth, googleProvider);
-      const user = userCredential.user;
-      await setDoc(doc(db, 'users', user.uid), {
-        uid: user.uid,
-        email: user.email,
-        displayName: user.displayName || user.email
-      });
-      navigate('/chat');
+      await signInWithPopup(auth, googleProvider);
+      navigate('/');
     } catch (error) {
       console.error('Error logging in with Google:', error);
     }

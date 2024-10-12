@@ -12,6 +12,15 @@ export default function App() {
   const {currentUser} = useContext(AuthContext);
   console.log(currentUser); 
 
+  const ProtectedRoute = ({children}) => {
+    if (!currentUser) {
+      return <Navigate to="/login"/>;
+    }
+
+    return children;
+
+  }
+ 
   return (
     <Router>
       <div className="min-h-screen bg-black text-white">
@@ -37,13 +46,21 @@ export default function App() {
           }}
         />
         <Routes>
-          <Route path="/login" element={<Login />} />
+
+          <Route path='/'>
+            <Route index element={
+              <ProtectedRoute>
+                <ChatApp />
+              </ProtectedRoute>
+            }/>
+            <Route path='login' element={<Login />} />
+            <Route path="signup" element={<Signup />} />
+          </Route>
+
+          {/* <Route path="/login" element={<Login />} />
           <Route path="/signup" element={<Signup />} />
-          <Route 
-            path="/chat" 
-            element={<ChatApp />} 
-          />
-          <Route path="*" element={<Navigate to="/login" />} />
+          <Route path="/chat" element={<ChatApp />} />
+          <Route path="*" element={<Navigate to="/login" />} /> */}
         </Routes>
       </div>
     </Router>

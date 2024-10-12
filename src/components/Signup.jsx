@@ -24,7 +24,7 @@ export function Signup() {
 
       await setDoc(doc(db, "userChats", user.id), {});
 
-      navigate('/chat');
+      navigate('/');
     } catch (error) {
       console.error('Error signing up:', error);
     }
