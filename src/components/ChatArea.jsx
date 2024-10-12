@@ -8,7 +8,7 @@ export function ChatArea({ selectedChat }) {
     { id: 1, sender: 'Alice', content: 'Hey, how are you?', time: '10:30 AM', status: 'read' },
     { id: 2, sender: 'You', content: 'I m doing great, thanks! How about you?', time: '10:31 AM', status: 'sent' },
     { id: 3, sender: 'Alice', content: 'I m good too. Do you want to grab lunch later?', time: '10:32 AM', status: 'read' },
-  ];
+  ];  
 
   const handleSend = () => {
     if (message.trim()) {
