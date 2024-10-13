@@ -150,7 +150,7 @@ export function ChatApp() {
                 user={user}
                 handleSelect={handleSelect}
             />
-            <ChatArea selectedChat={selectedChat} />
+            <ChatArea />
         </div>
     );
 }

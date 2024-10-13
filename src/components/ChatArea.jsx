@@ -1,26 +1,14 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useContext } from 'react';
 import { collection, query, orderBy, onSnapshot, addDoc, serverTimestamp } from 'firebase/firestore';
 import { auth, db } from '../firebase';
 import { Send as SendIcon } from 'lucide-react';
+import { ChatContext } from './context/ChatContext';
 
-export function ChatArea({ selectedChat }) {
+export function ChatArea() {
   const [messages, setMessages] = useState([]);
   const [newMessage, setNewMessage] = useState('');
+  const { data } = useContext(ChatContext);
 
-  useEffect(() => {
-    if (selectedChat) {
-      const q = query(collection(db, `chats/${selectedChat.id}/messages`), orderBy('createdAt'));
-      const unsubscribe = onSnapshot(q, (querySnapshot) => {
-        const messagesData = querySnapshot.docs.map(doc => ({
-          id: doc.id,
-          ...doc.data()
-        }));
-        setMessages(messagesData);
-      });
-
-      return () => unsubscribe();
-    }
-  }, [selectedChat]);
 
   const handleSendMessage = async (e) => {
     e.preventDefault();
@@ -35,23 +23,21 @@ export function ChatArea({ selectedChat }) {
     setNewMessage('');
   };
 
-  if (!selectedChat) {
-    return (
-      <div className="flex-1 flex items-center justify-center bg-black bg-opacity-70 backdrop-filter backdrop-blur-sm">
-        <p className="text-2xl text-gray-400">Select a chat to start messaging</p>
-      </div>
-    );
-  }
+  // if (!selectedChat) {
+  //   return (
+  //     <div className="flex-1 flex items-center justify-center bg-black bg-opacity-70 backdrop-filter backdrop-blur-sm">
+  //       <p className="text-2xl text-gray-400">Select a chat to start messaging</p>
+  //     </div>
+  //   );
+  // }
 
   return (
     <div className="flex-1 flex flex-col bg-black bg-opacity-70 backdrop-filter backdrop-blur-sm">
       <div className="bg-black bg-opacity-80 border-b border-gray-800 p-4 flex justify-between items-center">
         <div className="flex items-center">
-          <div className="w-10 h-10 bg-gradient-to-br from-gray-500 to-gray-700 rounded-full flex items-center justify-center text-white font-semibold text-lg mr-3">
-            {selectedChat.participants.find(p => p !== auth.currentUser.email).charAt(0).toUpperCase()}
-          </div>
+          <img src={data.user?.photoURL} className="w-10 h-10 bg-gradient-to-br from-gray-500 to-gray-700 rounded-full flex items-center justify-center text-white font-semibold text-lg mr-3"/>
           <div>
-            <h2 className="font-semibold text-white">{selectedChat.participants.find(p => p !== auth.currentUser.email)}</h2>
+            <h2 className="font-semibold text-white">{data.user?.displayName}</h2>
           </div>
         </div>
       </div>
