@@ -23,13 +23,13 @@ export function ChatArea() {
     setNewMessage('');
   };
 
-  // if (!selectedChat) {
-  //   return (
-  //     <div className="flex-1 flex items-center justify-center bg-black bg-opacity-70 backdrop-filter backdrop-blur-sm">
-  //       <p className="text-2xl text-gray-400">Select a chat to start messaging</p>
-  //     </div>
-  //   );
-  // }
+  if (!data.user?.displayName) {
+    return (
+      <div className="flex-1 flex items-center justify-center bg-black bg-opacity-70 backdrop-filter backdrop-blur-sm">
+        <p className="text-2xl text-gray-400">Select a chat to start messaging</p>
+      </div>
+    );
+  }
 
   return (
     <div className="flex-1 flex flex-col bg-black bg-opacity-70 backdrop-filter backdrop-blur-sm">
